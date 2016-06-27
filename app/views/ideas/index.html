@@ -1,0 +1,13 @@
+<h1>Idea Bawx</h1>
+
+<ul class="ideas">
+  <% @ideas.each do |idea| %>
+  <li>
+    <div class="idea">
+      <%= idea.title %>: <%= idea.body %>
+      <br>
+      <%= idea.quality %>
+     </div>
+  </li>
+  <% end %>
+</ul>
