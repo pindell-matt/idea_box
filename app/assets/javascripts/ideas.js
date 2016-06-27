@@ -30,7 +30,7 @@ $(document).ready(function(){
     var quality = idea.quality;
 
     var structure = '<div class=' + title + '>' +
-      '<h3>' + title + '</h3>' +
+      '<h3>Title: ' + title + '</h3>' +
       '<h4>' + quality + '</h4>' +
       '<span>' + body + '</span>';
 
@@ -39,5 +39,8 @@ $(document).ready(function(){
     $('.ideas').prepend(
       '<li>' + structure + deleteButton + '</li>'
     );
+
+    $('#new_idea_title').val("");
+    $('#new_idea_body').val("");
   }
 });
