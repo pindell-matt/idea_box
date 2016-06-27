@@ -4,7 +4,7 @@
   <% @ideas.each do |idea| %>
   <li>
     <div class="idea">
-      <%= idea.title %>: <%= idea.body %>
+      <%= idea.title %>: <%= truncate(idea.body, length: 100, separator: ' ') %>
       <br>
       <%= idea.quality %>
      </div>
