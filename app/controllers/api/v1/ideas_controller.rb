@@ -2,8 +2,7 @@ class Api::V1::IdeasController < Api::ApiController
   respond_to :json
 
   def index
-    @ideas = Idea.order(:created_at)
-    respond_with @ideas
+    respond_with Idea.order(:created_at)
   end
 
   def create
