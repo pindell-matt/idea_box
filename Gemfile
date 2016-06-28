@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-
 gem 'rails', '4.2.6'
 gem 'pg', '~> 0.15'
 gem 'sass-rails', '~> 5.0'
@@ -10,10 +9,15 @@ gem 'jquery-rails'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'responders'
+gem 'unicorn'
+gem 'rails_12factor'
 
 group :development, :test do
   gem 'pry'
   gem 'capybara'
+  gem 'database_cleaner'
+  gem 'selenium-webdriver'
+  gem 'factory_girl_rails', '~>4.0'
   gem 'launchy'
   gem 'mocha'
   gem 'shoulda-matchers'
