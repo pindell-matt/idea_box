@@ -38,16 +38,18 @@ $(document).ready(function(){
     var quality = changeQuality(currentQuality.html(), "up");
     var data = { quality: quality };
 
-    $.ajax({
-      method: 'PATCH',
-      url: '/api/v1/ideas/' + id,
-      data: data,
-      dataType: 'JSON',
-      success: currentQuality.html(quality),
-      error: function(id){
-        alert("Error - Failed to update Idea to: " + quality);
-      }
-    });
+    if (currentQuality.html() !== quality) {
+      $.ajax({
+        method: 'PATCH',
+        url: '/api/v1/ideas/' + id,
+        data: data,
+        dataType: 'JSON',
+        success: currentQuality.html(quality),
+        error: function(id){
+          alert("Error - Failed to update Idea to: " + quality);
+        }
+      });
+    }
   })
 
   $('.ideas').on('click', '.thumbs_down', function(){
@@ -56,16 +58,18 @@ $(document).ready(function(){
     var quality = changeQuality(currentQuality.html(), "down");
     var data = { quality: quality };
 
-    $.ajax({
-      method: 'PATCH',
-      url: '/api/v1/ideas/' + id,
-      data: data,
-      dataType: 'JSON',
-      success: currentQuality.html(quality),
-      error: function(id){
-        alert("Error - Failed to update Idea to: " + quality);
-      }
-    });
+    if (currentQuality.html() !== quality) {
+      $.ajax({
+        method: 'PATCH',
+        url: '/api/v1/ideas/' + id,
+        data: data,
+        dataType: 'JSON',
+        success: currentQuality.html(quality),
+        error: function(id){
+          alert("Error - Failed to update Idea to: " + quality);
+        }
+      });
+    }
   })
 
 });
