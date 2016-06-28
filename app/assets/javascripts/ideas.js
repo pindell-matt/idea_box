@@ -19,11 +19,11 @@ $(document).ready(function(){
 
   $('.ideas').on('click', '.delete', function(){
     var id = this.id
+    var data = { id: id }
 
     $.ajax({
       method: 'DELETE',
       url: '/api/v1/ideas/' + id,
-      data: id,
       dataType: 'JSON',
       success: deleteIdea(id),
       error: function(id){
@@ -108,12 +108,12 @@ var ideaFormatter = function(idea){
     $('#new_idea_body').val("");
   }
 
-var deleteIdea = function(id) {
+var deleteIdea = function(id){
   var searchableId = '#' + id;
   $(searchableId).remove();
 }
 
-function changeQuality(current, movement){
+var changeQuality = function(current, movement){
   if (movement === "up") {
     var map = { "swill": "plausible", "plausible": "genius", "genius": "genius" };
   } else if (movement === "down") {
