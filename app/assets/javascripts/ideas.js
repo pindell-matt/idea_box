@@ -26,13 +26,13 @@ $(document).ready(function(){
 
   function ideaFormatter(idea){
     var title   = idea.title;
-    var body    = idea.body;
+    var body    = idea.body.substring(0, 100) + ' ...';
     var quality = idea.quality;
 
     var structure = '<div class=' + title + '>' +
       '<h3>Title: ' + title + '</h3>' +
       '<h4>' + quality + '</h4>' +
-      '<span>' + body + '</span>';
+      '<p>' + body + '</p>';
 
     var deleteButton = '<button id=' + title + '>Delete</button>';
 
