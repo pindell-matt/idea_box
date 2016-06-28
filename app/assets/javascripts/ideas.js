@@ -1,8 +1,5 @@
 $(document).ready(function(){
   loadIdeas
-    .then(function(){
-      deleteListener();
-    })
 
   $('#idea-form').submit(function(event){
     event.preventDefault();
@@ -19,6 +16,21 @@ $(document).ready(function(){
       }
     });
   });
+
+  $('.ideas').on('click', ':button', function(){
+    var data = this.id
+
+    $.ajax({
+      method: 'DELETE',
+      url: '/api/v1/ideas/' + data,
+      data: data,
+      dataType: 'JSON',
+      success: deleteIdea(data),
+      error: function(data){
+        alert("Error - Failed to delete Idea.");
+      }
+    });
+  })
 
 });
 
@@ -37,12 +49,12 @@ var ideaFormatter = function(idea){
     var quality = idea.quality;
 
     // don't need div id
-    var structure = '<div id=' + id + '>' +
+    var structure =
       '<h3>Title: ' + title + '</h3>' +
       '<h4>' + quality + '</h4>' +
       '<p>' + body + '</p>';
 
-    var deleteButton = '<button id=' + id + '>Delete</button>';
+    var deleteButton = '<button class="delete" id=' + id + '>Delete</button>';
 
     $('.ideas').prepend(
       '<li id=' + id + '>' + structure + deleteButton + '</li>'
@@ -51,23 +63,6 @@ var ideaFormatter = function(idea){
     $('#new_idea_title').val("");
     $('#new_idea_body').val("");
   }
-
-var deleteListener = function(){
-  $(':button').on('click', function(){
-    var data = this.id
-
-    $.ajax({
-      method: 'DELETE',
-      url: '/api/v1/ideas/' + data,
-      data: data,
-      dataType: 'JSON',
-      success: deleteIdea(data),
-      error: function(data){
-        alert("Error - Failed to delete Idea.");
-      }
-    });
-  })
-}
 
 var deleteIdea = function(id) {
   var searchableId = '#' + id
