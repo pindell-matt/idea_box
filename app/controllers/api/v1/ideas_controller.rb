@@ -13,6 +13,11 @@ class Api::V1::IdeasController < Api::ApiController
     respond_with Idea.find(params["id"]).destroy
   end
 
+  def update
+    @idea = Idea.find(params["id"])
+    respond_with @idea.update_attributes(quality: params["quality"])
+  end
+
   private
     def idea_params
       params.permit('title', 'body')
