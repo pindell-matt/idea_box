@@ -11,13 +11,13 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'responders'
 gem 'unicorn'
 gem 'rails_12factor'
+gem 'faker'
 
 group :development, :test do
   gem 'pry'
   gem 'capybara'
+  gem 'capybara-webkit'
   gem 'database_cleaner'
-  gem 'selenium-webdriver'
-  gem 'factory_girl_rails', '~>4.0'
   gem 'launchy'
   gem 'mocha'
   gem 'shoulda-matchers'
