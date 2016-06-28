@@ -34,10 +34,10 @@ $(document).ready(function(){
       '<h4>' + quality + '</h4>' +
       '<p>' + body + '</p>';
 
-    var deleteButton = '<button id=' + title + '>Delete</button>';
+    // var deleteButton = '<button id=' + title + '>Delete</button>';
 
     $('.ideas').prepend(
-      '<li>' + structure + deleteButton + '</li>'
+      '<li>' + structure + '</li>'
     );
 
     $('#new_idea_title').val("");
