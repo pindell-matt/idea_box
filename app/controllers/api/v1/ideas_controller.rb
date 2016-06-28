@@ -2,18 +2,15 @@ class Api::V1::IdeasController < Api::ApiController
   respond_to :json
 
   def index
-    @ideas = Idea.order(:created_at)
-    respond_with @ideas
+    respond_with Idea.order(:created_at)
   end
 
   def create
-    @idea = Idea.create(idea_params)
-    respond_with @idea, location: -> { api_v1_ideas_path(@idea) }
+    respond_with Idea.create(idea_params), location: nil
   end
 
   def destroy
-    @idea = Idea.find(params["id"])
-    respond_with @idea.destroy
+    respond_with Idea.find(params["id"]).destroy
   end
 
   private
