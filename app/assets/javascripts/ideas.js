@@ -50,6 +50,24 @@ $(document).ready(function(){
     });
   })
 
+  $('.ideas').on('click', '.thumbs_down', function(){
+    var id = this.id;
+    var currentQuality = $('tr#' + id + ' td:nth-child(2)');
+    var quality = changeQuality(currentQuality.html(), "down");
+    var data = { quality: quality };
+
+    $.ajax({
+      method: 'PATCH',
+      url: '/api/v1/ideas/' + id,
+      data: data,
+      dataType: 'JSON',
+      success: currentQuality.html(quality),
+      error: function(id){
+        alert("Error - Failed to update Idea to: " + quality);
+      }
+    });
+  })
+
 });
 
 var loadIdeas = $.getJSON('/api/v1/ideas').then(
@@ -89,11 +107,6 @@ var ideaFormatter = function(idea){
 var deleteIdea = function(id) {
   var searchableId = '#' + id;
   $(searchableId).remove();
-}
-
-var thumbsUpIdea = function(id) {
-  var searchableId = '#' + id;
-  // $(searchableId).
 }
 
 function changeQuality(current, movement){
