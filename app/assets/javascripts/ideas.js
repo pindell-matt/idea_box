@@ -95,9 +95,9 @@ var ideaFormatter = function(idea){
     var buttons = thumbsUp + thumbsDown + deleteButton;
 
     var structure =
-      '<td>' + title + '</td>' +
+      '<td contenteditable="true">' + title + '</td>' +
       '<td>' + quality + '</td>' +
-      '<td>' + body + '</td>' +
+      '<td contenteditable="true">' + body + '</td>' +
       '<td>' + buttons + '</td>';
 
     $('.ideas tr:first').after(
