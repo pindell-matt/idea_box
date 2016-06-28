@@ -11,6 +11,11 @@ class Api::V1::IdeasController < Api::ApiController
     respond_with @idea, location: -> { api_v1_ideas_path(@idea) }
   end
 
+  def destroy
+    @idea = Idea.find(params["id"])
+    respond_with @idea.destroy
+  end
+
   private
     def idea_params
       params.permit('title', 'body')

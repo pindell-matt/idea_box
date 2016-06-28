@@ -1,14 +1,23 @@
 <h1>Idea Bawx</h1>
 
 <form id="idea-form">
-  <label for="title">Title</label>:
-  <input id="new_idea_title" name="title" type="text" placeholder="Name for your New Idea" required="true" minlength="1" /><br />
+  <fieldset>
+    <legend>Save a New Idea:</legend>
+    <label for="title">Title</label>:<br>
+    <input id="new_idea_title" name="title" type="text" placeholder="Name for your New Idea" required="true" minlength="1" size="35" /><br />
 
-  <label for="body">Body</label>:
-  <input id="new_idea_body" name="body" type="text" placeholder="Description of your New Idea" required="true" minlength="1" /><br />
+    <label for="body">Body</label>:<br>
+    <input id="new_idea_body" name="body" type="text" placeholder="Description of your New Idea" required="true" minlength="1" size="35" /><br />
 
-  <input name="commit" type="submit" value="Save" />
-</form>
+    <input name="commit" type="submit" value="Save" />
+  </fieldset>
+</form><br>
 
-<ul class="ideas">
-</ul>
+<table style="width:100%" class="ideas" border="1">
+ <tr class="headers">
+   <th>Title</th>
+   <th>Quality</th>
+   <th>Body</th>
+   <th>Options</th>
+ </tr>
+</table>
