@@ -48,6 +48,7 @@ var ideaFormatter = function(idea){
     var body    = idea.body;
     var quality = idea.quality;
 
+    debugger;
     var deleteButton = '<button class="delete" id=' + id + '>Delete</button>';
 
     var structure =
