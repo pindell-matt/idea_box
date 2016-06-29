@@ -1,4 +1,5 @@
 $(document).ready(function(){
+  listenForSearches()
   loadIdeas
 
   $('#idea-form').submit(function(event){
@@ -50,6 +51,7 @@ $(document).ready(function(){
         }
       });
     }
+
   })
 
   $('.ideas').on('click', '.thumbs_down', function(){
@@ -75,6 +77,7 @@ $(document).ready(function(){
 });
 
 var loadIdeas = $.getJSON('/api/v1/ideas').then(
+  // ideasResponse.map(ideaFormatter)
   function(ideasResponse, status){
     $.each(ideasResponse, function(index, idea) {
       ideaFormatter(idea);
@@ -101,13 +104,13 @@ var ideaFormatter = function(idea){
     var buttons = thumbsUp + thumbsDown + deleteButton;
 
     var structure =
-      '<td contenteditable="true" id="title">' + title + '</td>' +
+      '<td contenteditable="true" class="searchable" id="title">' + title + '</td>' +
       '<td>' + quality + '</td>' +
-      '<td contenteditable="true" id="body">' + body + '</td>' +
+      '<td contenteditable="true" class="searchable" id="body">' + body + '</td>' +
       '<td>' + buttons + '</td>';
 
     $('.ideas tr:first').after(
-      '<tr id=' + id + '>' + structure + '</tr>'
+      '<tr class="searchable" id=' + id + '>' + structure + '</tr>'
     );
 
     $('#new_idea_title').val("");
@@ -153,4 +156,24 @@ var listenForEdits = function(){
         });
     }
   });
+}
+
+var listenForSearches = function(){
+  $('#search').bind('keyup', updateQuery);
+
+  function updateQuery(){
+    var query = $('#search').val();
+    var allIdeas = $('tr').children('td.searchable');
+
+    var matches = allIdeas.each(function (data, content){
+      var currentText = $(content);
+
+      if (currentText.text().indexOf(query) != -1) {
+        $(currentText.parent('tr')[0]).show()
+      } else {
+        $(currentText.parent('tr')[0]).hide();
+      }
+
+    })
+  }
 }
