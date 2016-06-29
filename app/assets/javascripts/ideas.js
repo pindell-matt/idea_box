@@ -85,8 +85,14 @@ var loadIdeas = $.getJSON('/api/v1/ideas').then(
 var ideaFormatter = function(idea){
     var id = idea.id;
     var title = idea.title;
-    var body = idea.body;
     var quality = idea.quality;
+
+    var rawBody = idea.body;
+    if (rawBody.length > 100) {
+      var body = rawBody.substr(0, 100) + "...";
+    } else {
+      var body = rawBody;
+    }
 
     var deleteButton = '<button class="delete" id=' + id + '>Delete</button>';
     var thumbsUp = '<button class="thumbs_up" id=' + id + '>Thumbs Up</button>';
@@ -95,9 +101,9 @@ var ideaFormatter = function(idea){
     var buttons = thumbsUp + thumbsDown + deleteButton;
 
     var structure =
-      '<td>' + title + '</td>' +
+      '<td contenteditable="true" id="title">' + title + '</td>' +
       '<td>' + quality + '</td>' +
-      '<td>' + body + '</td>' +
+      '<td contenteditable="true" id="body">' + body + '</td>' +
       '<td>' + buttons + '</td>';
 
     $('.ideas tr:first').after(
@@ -106,6 +112,8 @@ var ideaFormatter = function(idea){
 
     $('#new_idea_title').val("");
     $('#new_idea_body').val("");
+
+    listenForEdits();
   }
 
 var deleteIdea = function(id){
@@ -120,4 +128,29 @@ var changeQuality = function(current, movement){
     var map = { "swill": "swill", "plausible": "swill", "genius": "plausible" };
   }
   return newQuality = map[current];
+}
+
+var listenForEdits = function(){
+  $('td[contenteditable=true]')
+    .focus(function() {
+      $(this).data("initialText", $(this).html());
+    })
+    .blur(function() {
+      if ($(this).data("initialText") !== $(this).html()) {
+        var id = this.parentElement.id;
+        var dataType = this.id;
+        var data = new Object();
+        data[dataType] = $(this).html();
+
+        $.ajax({
+          method: 'PATCH',
+          url: '/api/v1/ideas/' + id,
+          data: data,
+          dataType: 'JSON',
+          error: function(id){
+            alert("Error - Failed to update content.");
+          }
+        });
+    }
+  });
 }
