@@ -163,17 +163,78 @@ var listenForSearches = function(){
 
   function updateQuery(){
     var query = $('#search').val();
-    var allIdeas = $('tr').children('td.searchable');
+    // var allIdeas = $('tr').children('td.searchable');
 
-    var matches = allIdeas.each(function (data, content){
-      var currentText = $(content);
+    var ideaRows = $('tbody').children('tr.searchable');
 
-      if (currentText.text().indexOf(query) != -1) {
-        $(currentText.parent('tr')[0]).show()
-      } else {
-        $(currentText.parent('tr')[0]).hide();
-      }
+    ideaRows.each(function(index, row){
+      $(row).hide()
+
+      var kids = $(row).children();
+
+      var matches = kids.filter(function (data, content){
+        return $(content).text().includes(query);
+      })
+
+      var uniqMatches = $.unique(matches);
+
+      uniqMatches.each(function(index, match){
+        $($(match).parent('tr')[0]).show()
+      })
 
     })
+
+    // debugger;
+
+    // var matches = ideaRows.each(function (index, row){
+    //   $(row).children().map(function(index, tds){
+    //     return $(tds).text()
+    //   })
+    // })
+    //
+    // debugger;
+
+    // var matches = allIdeas.filter(function (data, content){
+    //   return $(content).text().includes(query);
+    // })
+    //
+    // debugger;
+
+    //   var currentText = $(content);
+    //   if (currentText.text().includes(query)) {
+    //     $(currentText.parent('tr')[0]).show()
+    //   } else {
+    //     $(currentText.parent('tr')[0]).hide();
+    //   }
+    //
+    // })
+
+
+    //   var currentText = $(content);
+    //   if (currentText.text().includes(query)) {
+    //     $(currentText.parent('tr')[0]).show()
+    //   } else {
+    //     $(currentText.parent('tr')[0]).hide();
+    //   }
+    //
+    // })
+
+
+
+    // var matches = allIdeas.each(function (data, content){
+    //   var currentText = $(content);
+    //   if (currentText.text().includes(query)) {
+    //     $(currentText.parent('tr')[0]).show()
+    //   } else {
+    //     $(currentText.parent('tr')[0]).hide();
+    //   }
+    //
+    // })
   }
+}
+
+function toggleRow(row){
+  var matches = row.filter(function (data, content){
+    return $(content).text().includes(query);
+  })
 }
