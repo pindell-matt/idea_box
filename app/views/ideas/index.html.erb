@@ -7,9 +7,16 @@
     <input id="new_idea_title" name="title" type="text" placeholder="Name for your New Idea" required="true" minlength="1" size="35" /><br />
 
     <label for="body">Body</label>:<br>
-    <input id="new_idea_body" name="body" type="text" placeholder="Description of your New Idea" required="true" minlength="1" size="35" /><br />
+    <textarea id="new_idea_body" name="body" type="text" placeholder="Description of your New Idea" required="true" minlength="1"></textarea><br />
 
     <input name="commit" type="submit" value="Save" />
+  </fieldset>
+</form><br>
+
+<form id="search-form">
+  <fieldset>
+    <legend>Search:</legend>
+    <input id="search_field" name="search" type="text" placeholder="Enter Text to search by Title or Body" size="35" /><br />
   </fieldset>
 </form><br>
 
