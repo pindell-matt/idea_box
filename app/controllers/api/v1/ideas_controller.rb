@@ -15,11 +15,14 @@ class Api::V1::IdeasController < Api::ApiController
 
   def update
     @idea = Idea.find(params["id"])
-    respond_with @idea.update_attributes(quality: params["quality"])
+    # require "pry"
+    # binding.pry
+    respond_with @idea.update_attributes(idea_params)
+    # respond_with @idea.update_attributes(quality: params["quality"])
   end
 
   private
     def idea_params
-      params.permit('title', 'body')
+      params.permit('title', 'body', 'quality')
     end
 end
