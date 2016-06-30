@@ -87,9 +87,7 @@ var loadIdeas = $.getJSON('/api/v1/ideas').then(
 var ideaFormatter = function(idea){
     var structure = rowContentsFormatter(idea);
 
-    $('.ideas tr:first').after(
-      '<tr class="searchable" id=' + idea.id + '>' + structure + '</tr>'
-    );
+    prependNewIdea(idea.id, structure);
 
     $('#new_idea_title').val("");
     $('#new_idea_body').val("");
@@ -217,4 +215,10 @@ var rowContentsFormatter = function(idea){
     '<td>' + quality + '</td>' +
     '<td contenteditable="true" class="searchable body">' + body + '</td>' +
     '<td>' + buttons + '</td>';
+}
+
+var prependNewIdea = function(id, structure){
+  $('.ideas tr:first').after(
+    '<tr class="searchable" id=' + id + '>' + structure + '</tr>'
+  );
 }
