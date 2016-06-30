@@ -88,19 +88,13 @@ var ideaFormatter = function(idea){
     var id = idea.id,
         title = idea.title,
         quality = idea.quality,
-        rawBody = idea.body;
+        body = bodyLengthFormatter(idea.body);
 
-    if (rawBody.length > 100) {
-      var body = rawBody.substr(0, 100) + "...";
-    } else {
-      var body = rawBody;
-    }
-
-    // var deleteButton = '<button class="delete" id=' + id + '>Delete</button>',
-    //     thumbsUp = '<button class="thumbs_up" id=' + id + '>Thumbs Up</button>',
-    //     thumbsDown = '<button class="thumbs_down" id=' + id + '>Thumbs Down</button>';
-
-    // var buttons = thumbsUp + thumbsDown + deleteButton;
+    // if (rawBody.length > 100) {
+    //   var body = rawBody.substr(0, 100) + "...";
+    // } else {
+    //   var body = rawBody;
+    // }
 
     var buttons = buttonsFormatter(id);
 
@@ -219,4 +213,12 @@ var buttonsFormatter = function(id){
       thumbsUp = '<button class="thumbs_up" id=' + id + '>Thumbs Up</button>',
       thumbsDown = '<button class="thumbs_down" id=' + id + '>Thumbs Down</button>';
   return thumbsUp + thumbsDown + deleteButton;
+}
+
+var bodyLengthFormatter = function(rawBody){
+  if (rawBody.length > 100) {
+    return body = rawBody.substr(0, 100) + "...";
+  } else {
+    return body = rawBody;
+  }
 }
