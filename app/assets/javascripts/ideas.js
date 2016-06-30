@@ -89,8 +89,9 @@ var ideaFormatter = function(idea){
 
     prependNewIdea(idea.id, structure);
 
-    $('#new_idea_title').val("");
-    $('#new_idea_body').val("");
+    clearNewIdeaForm();
+    // $('#new_idea_title').val("");
+    // $('#new_idea_body').val("");
 
     listenForEdits();
   }
@@ -221,4 +222,9 @@ var prependNewIdea = function(id, structure){
   $('.ideas tr:first').after(
     '<tr class="searchable" id=' + id + '>' + structure + '</tr>'
   );
+}
+
+var clearNewIdeaForm = function(){
+  $('#new_idea_title').val("");
+  $('#new_idea_body').val("");
 }
