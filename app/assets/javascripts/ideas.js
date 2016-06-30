@@ -11,7 +11,7 @@ $(document).ready(function(){
       url: '/api/v1/ideas',
       data: data,
       dataType: 'JSON',
-      success: ideaFormatter,
+      success: processIdea,
       error: function(data){
         alert("Error - Could not create Idea.");
       }
@@ -79,20 +79,15 @@ $(document).ready(function(){
 var loadIdeas = $.getJSON('/api/v1/ideas').then(
   function(ideasResponse, status){
     $.each(ideasResponse, function(index, idea) {
-      ideaFormatter(idea);
+      processIdea(idea);
     });
   }
 )
 
-var ideaFormatter = function(idea){
+var processIdea = function(idea){
     var structure = rowContentsFormatter(idea);
-
     prependNewIdea(idea.id, structure);
-
     clearNewIdeaForm();
-    // $('#new_idea_title').val("");
-    // $('#new_idea_body').val("");
-
     listenForEdits();
   }
 
