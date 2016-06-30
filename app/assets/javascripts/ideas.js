@@ -6,53 +6,26 @@ $(document).ready(function(){
     event.preventDefault();
     var data = $(this).serialize();
 
-    // ajaxCall(method, url, data, successMethod)
     ajaxCall('POST', 'api/v1/ideas', data, processIdea)
-
-    // $.ajax({
-    //   method: 'POST',
-    //   url: '/api/v1/ideas',
-    //   data: data,
-    //   dataType: 'JSON',
-    //   success: processIdea,
-    //   error: function(data){
-    //     alert("Error - Could not create Idea.");
-    //   }
-    // });
   });
 
   $('.ideas').on('click', '.delete', function(){
     var id = this.id,
-        data = { id: id }
+        data = { id: id },
+        url = 'api/v1/ideas/' + id;
 
-    $.ajax({
-      method: 'DELETE',
-      url: '/api/v1/ideas/' + id,
-      dataType: 'JSON',
-      success: deleteIdea(id),
-      error: function(id){
-        alert("Error - Failed to delete Idea: " + id);
-      }
-    });
+    ajaxCall('DELETE', url, data, deleteIdea(id))
   })
 
   $('.ideas').on('click', '.thumbs_up', function(){
     var id = this.id,
         currentQuality = $('tr#' + id + ' td:nth-child(2)'),
         quality = changeQuality(currentQuality.html(), "up"),
-        data = { quality: quality };
+        data = { quality: quality },
+        url = '/api/v1/ideas/' + id;
 
     if (currentQuality.html() !== quality) {
-      $.ajax({
-        method: 'PATCH',
-        url: '/api/v1/ideas/' + id,
-        data: data,
-        dataType: 'JSON',
-        success: currentQuality.html(quality),
-        error: function(id){
-          alert("Error - Failed to update Idea to: " + quality);
-        }
-      });
+      ajaxCall('PATCH', url, data, currentQuality.html(quality))
     }
 
   })
@@ -61,19 +34,11 @@ $(document).ready(function(){
     var id = this.id,
         currentQuality = $('tr#' + id + ' td:nth-child(2)'),
         quality = changeQuality(currentQuality.html(), "down"),
-        data = { quality: quality };
+        data = { quality: quality },
+        url = '/api/v1/ideas/' + id;
 
     if (currentQuality.html() !== quality) {
-      $.ajax({
-        method: 'PATCH',
-        url: '/api/v1/ideas/' + id,
-        data: data,
-        dataType: 'JSON',
-        success: currentQuality.html(quality),
-        error: function(id){
-          alert("Error - Failed to update Idea to: " + quality);
-        }
-      });
+      ajaxCall('PATCH', url, data, currentQuality.html(quality))
     }
   })
 
@@ -109,46 +74,37 @@ var changeQuality = function(current, movement){
 }
 
 var listenForEdits = function(){
-  var $td = $(this);
   $('td[contenteditable=true]')
     .focus(function() {
-      $td.data("initialText", $td.html());
+      $(this).data("initialText", $(this).html());
     })
     .blur(function() {
-      if ($td.data("initialText") !== $td.html()) {
+      if ($(this).data("initialText") !== $(this).html()) {
         var id = this.parentElement.id,
-            dataType = this.id,
-            data = new Object();
+            dataType = this.classList[1],
+            data = new Object(),
+            url = '/api/v1/ideas/' + id;
 
-        data[dataType] = $td.html();
-
-        $.ajax({
-          method: 'PATCH',
-          url: '/api/v1/ideas/' + id,
-          data: data,
-          dataType: 'JSON',
-          error: function(id){
-            alert("Error - Failed to update content.");
-          }
-        });
-    }
-  });
+        data[dataType] = $(this).html();
+        ajaxCall('PATCH', url, data, function(){})
+      }
+    });
 }
 
 var listenForSearches = function(){
   $('#search').bind('keyup', updateQuery);
 
   function updateQuery(){
-    var $query = $('#search').val(),
-        $ideaRows = $('tbody').children('tr.searchable');
+    var query = $('#search').val();
+    var ideaRows = $('tbody').children('tr.searchable');
 
-    $ideaRows.each(function(index, row){
+    ideaRows.each(function(index, row){
       $(row).hide()
 
       var kids = $(row).children();
 
       var matches = kids.filter(function (data, content){
-        return $(content).text().includes($query);
+        return $(content).text().includes(query);
       })
 
       var uniqMatches = $.unique(matches);
