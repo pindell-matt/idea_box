@@ -96,11 +96,13 @@ var ideaFormatter = function(idea){
       var body = rawBody;
     }
 
-    var deleteButton = '<button class="delete" id=' + id + '>Delete</button>',
-        thumbsUp = '<button class="thumbs_up" id=' + id + '>Thumbs Up</button>',
-        thumbsDown = '<button class="thumbs_down" id=' + id + '>Thumbs Down</button>';
+    // var deleteButton = '<button class="delete" id=' + id + '>Delete</button>',
+    //     thumbsUp = '<button class="thumbs_up" id=' + id + '>Thumbs Up</button>',
+    //     thumbsDown = '<button class="thumbs_down" id=' + id + '>Thumbs Down</button>';
 
-    var buttons = thumbsUp + thumbsDown + deleteButton;
+    // var buttons = thumbsUp + thumbsDown + deleteButton;
+
+    var buttons = buttonsFormatter(id);
 
     var structure =
       '<td contenteditable="true" class="searchable title">' + title + '</td>' +
@@ -143,7 +145,7 @@ var listenForEdits = function(){
         var id = this.parentElement.id,
             dataType = this.id,
             data = new Object();
-            
+
         data[dataType] = $td.html();
 
         $.ajax({
@@ -210,4 +212,11 @@ var sortRows = function(){
   });
 
   $peopleli.detach().appendTo($people);
+}
+
+var buttonsFormatter = function(id){
+  var deleteButton = '<button class="delete" id=' + id + '>Delete</button>',
+      thumbsUp = '<button class="thumbs_up" id=' + id + '>Thumbs Up</button>',
+      thumbsDown = '<button class="thumbs_down" id=' + id + '>Thumbs Down</button>';
+  return thumbsUp + thumbsDown + deleteButton;
 }
