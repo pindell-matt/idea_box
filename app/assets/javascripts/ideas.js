@@ -85,27 +85,10 @@ var loadIdeas = $.getJSON('/api/v1/ideas').then(
 )
 
 var ideaFormatter = function(idea){
-    var id = idea.id,
-        title = idea.title,
-        quality = idea.quality,
-        body = bodyLengthFormatter(idea.body);
-
-    // if (rawBody.length > 100) {
-    //   var body = rawBody.substr(0, 100) + "...";
-    // } else {
-    //   var body = rawBody;
-    // }
-
-    var buttons = buttonsFormatter(id);
-
-    var structure =
-      '<td contenteditable="true" class="searchable title">' + title + '</td>' +
-      '<td>' + quality + '</td>' +
-      '<td contenteditable="true" class="searchable body">' + body + '</td>' +
-      '<td>' + buttons + '</td>';
+    var structure = rowContentsFormatter(idea);
 
     $('.ideas tr:first').after(
-      '<tr class="searchable" id=' + id + '>' + structure + '</tr>'
+      '<tr class="searchable" id=' + idea.id + '>' + structure + '</tr>'
     );
 
     $('#new_idea_title').val("");
@@ -221,4 +204,17 @@ var bodyLengthFormatter = function(rawBody){
   } else {
     return body = rawBody;
   }
+}
+
+var rowContentsFormatter = function(idea){
+  var title = idea.title,
+      quality = idea.quality,
+      body = bodyLengthFormatter(idea.body),
+      buttons = buttonsFormatter(idea.id);
+
+  return structure =
+    '<td contenteditable="true" class="searchable title">' + title + '</td>' +
+    '<td>' + quality + '</td>' +
+    '<td contenteditable="true" class="searchable body">' + body + '</td>' +
+    '<td>' + buttons + '</td>';
 }
