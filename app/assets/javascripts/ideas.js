@@ -27,7 +27,6 @@ $(document).ready(function(){
     if (currentQuality.html() !== quality) {
       ajaxCall('PATCH', url, data, currentQuality.html(quality))
     }
-
   })
 
   $('.ideas').on('click', '.thumbs_down', function(){
@@ -115,33 +114,6 @@ var listenForSearches = function(){
 
     })
   }
-}
-
-function toggleRow(row){
-  var matches = row.filter(function (data, content){
-    return $(content).text().includes(query);
-  })
-}
-
-var sortRows = function(){
-  var $ideaRows = $('tbody').children('tr.searchable');
-  var $people = $('ul.js-people'),
-      $peopleli = $people.children('li');
-
-  $peopleli.sort(function(a,b){
-    var an = a.getAttribute('data-name'),
-    	  bn = b.getAttribute('data-name');
-
-    if(an > bn) {
-    	return 1;
-    }
-    if(an < bn) {
-    	return -1;
-    }
-    return 0;
-  });
-
-  $peopleli.detach().appendTo($people);
 }
 
 var buttonsFormatter = function(id){
