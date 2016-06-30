@@ -19,8 +19,8 @@ $(document).ready(function(){
   });
 
   $('.ideas').on('click', '.delete', function(){
-    var id = this.id
-    var data = { id: id }
+    var id = this.id,
+        data = { id: id }
 
     $.ajax({
       method: 'DELETE',
@@ -34,10 +34,10 @@ $(document).ready(function(){
   })
 
   $('.ideas').on('click', '.thumbs_up', function(){
-    var id = this.id;
-    var currentQuality = $('tr#' + id + ' td:nth-child(2)');
-    var quality = changeQuality(currentQuality.html(), "up");
-    var data = { quality: quality };
+    var id = this.id,
+        currentQuality = $('tr#' + id + ' td:nth-child(2)'),
+        quality = changeQuality(currentQuality.html(), "up"),
+        data = { quality: quality };
 
     if (currentQuality.html() !== quality) {
       $.ajax({
@@ -55,10 +55,10 @@ $(document).ready(function(){
   })
 
   $('.ideas').on('click', '.thumbs_down', function(){
-    var id = this.id;
-    var currentQuality = $('tr#' + id + ' td:nth-child(2)');
-    var quality = changeQuality(currentQuality.html(), "down");
-    var data = { quality: quality };
+    var id = this.id,
+        currentQuality = $('tr#' + id + ' td:nth-child(2)'),
+        quality = changeQuality(currentQuality.html(), "down"),
+        data = { quality: quality };
 
     if (currentQuality.html() !== quality) {
       $.ajax({
@@ -85,20 +85,20 @@ var loadIdeas = $.getJSON('/api/v1/ideas').then(
 )
 
 var ideaFormatter = function(idea){
-    var id = idea.id;
-    var title = idea.title;
-    var quality = idea.quality;
+    var id = idea.id,
+        title = idea.title,
+        quality = idea.quality,
+        rawBody = idea.body;
 
-    var rawBody = idea.body;
     if (rawBody.length > 100) {
       var body = rawBody.substr(0, 100) + "...";
     } else {
       var body = rawBody;
     }
 
-    var deleteButton = '<button class="delete" id=' + id + '>Delete</button>';
-    var thumbsUp = '<button class="thumbs_up" id=' + id + '>Thumbs Up</button>';
-    var thumbsDown = '<button class="thumbs_down" id=' + id + '>Thumbs Down</button>';
+    var deleteButton = '<button class="delete" id=' + id + '>Delete</button>',
+        thumbsUp = '<button class="thumbs_up" id=' + id + '>Thumbs Up</button>',
+        thumbsDown = '<button class="thumbs_down" id=' + id + '>Thumbs Down</button>';
 
     var buttons = thumbsUp + thumbsDown + deleteButton;
 
@@ -140,9 +140,10 @@ var listenForEdits = function(){
     })
     .blur(function() {
       if ($td.data("initialText") !== $td.html()) {
-        var id = this.parentElement.id;
-        var dataType = this.id;
-        var data = new Object();
+        var id = this.parentElement.id,
+            dataType = this.id,
+            data = new Object();
+            
         data[dataType] = $td.html();
 
         $.ajax({
@@ -162,8 +163,8 @@ var listenForSearches = function(){
   $('#search').bind('keyup', updateQuery);
 
   function updateQuery(){
-    var $query = $('#search').val();
-    var $ideaRows = $('tbody').children('tr.searchable');
+    var $query = $('#search').val(),
+        $ideaRows = $('tbody').children('tr.searchable');
 
     $ideaRows.each(function(index, row){
       $(row).hide()
@@ -191,6 +192,7 @@ function toggleRow(row){
 }
 
 var sortRows = function(){
+  var $ideaRows = $('tbody').children('tr.searchable');
   var $people = $('ul.js-people'),
       $peopleli = $people.children('li');
 
