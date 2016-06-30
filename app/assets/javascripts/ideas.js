@@ -6,16 +6,19 @@ $(document).ready(function(){
     event.preventDefault();
     var data = $(this).serialize();
 
-    $.ajax({
-      method: 'POST',
-      url: '/api/v1/ideas',
-      data: data,
-      dataType: 'JSON',
-      success: processIdea,
-      error: function(data){
-        alert("Error - Could not create Idea.");
-      }
-    });
+    // ajaxCall(method, url, data, successMethod)
+    ajaxCall('POST', 'api/v1/ideas', data, processIdea)
+
+    // $.ajax({
+    //   method: 'POST',
+    //   url: '/api/v1/ideas',
+    //   data: data,
+    //   dataType: 'JSON',
+    //   success: processIdea,
+    //   error: function(data){
+    //     alert("Error - Could not create Idea.");
+    //   }
+    // });
   });
 
   $('.ideas').on('click', '.delete', function(){
@@ -222,4 +225,17 @@ var prependNewIdea = function(id, structure){
 var clearNewIdeaForm = function(){
   $('#new_idea_title').val("");
   $('#new_idea_body').val("");
+}
+
+var ajaxCall = function(method, url, data, successMethod){
+  $.ajax({
+    method: method,
+    url: url,
+    data: data,
+    dataType: 'JSON',
+    success: successMethod,
+    error: function(data){
+      alert("Error for: " + data);
+    }
+  });
 }
