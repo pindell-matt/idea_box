@@ -19,7 +19,7 @@ RSpec.feature 'current user can edit the title or body of a new Idea' do
     end
 
     within('table tr:nth-child(2)') do
-      title = find('#title')
+      title = find('.title')
       title.set('Edited Title')
     end
 
@@ -34,7 +34,7 @@ RSpec.feature 'current user can edit the title or body of a new Idea' do
     end
 
     within('table tr:nth-child(2)') do
-      body = find('#body')
+      body = find('.body')
       body.set("I've been Edited!")
     end
 

@@ -6,116 +6,55 @@ $(document).ready(function(){
     event.preventDefault();
     var data = $(this).serialize();
 
-    $.ajax({
-      method: 'POST',
-      url: '/api/v1/ideas',
-      data: data,
-      dataType: 'JSON',
-      success: ideaFormatter,
-      error: function(data){
-        alert("Error - Could not create Idea.");
-      }
-    });
+    ajaxCall('POST', 'api/v1/ideas', data, processIdea)
   });
 
   $('.ideas').on('click', '.delete', function(){
-    var id = this.id
-    var data = { id: id }
+    var id = this.id,
+        data = { id: id },
+        url = 'api/v1/ideas/' + id;
 
-    $.ajax({
-      method: 'DELETE',
-      url: '/api/v1/ideas/' + id,
-      dataType: 'JSON',
-      success: deleteIdea(id),
-      error: function(id){
-        alert("Error - Failed to delete Idea: " + id);
-      }
-    });
+    ajaxCall('DELETE', url, data, deleteIdea(id))
   })
 
   $('.ideas').on('click', '.thumbs_up', function(){
-    var id = this.id;
-    var currentQuality = $('tr#' + id + ' td:nth-child(2)');
-    var quality = changeQuality(currentQuality.html(), "up");
-    var data = { quality: quality };
+    var id = this.id,
+        currentQuality = $('tr#' + id + ' td:nth-child(2)'),
+        quality = changeQuality(currentQuality.html(), "up"),
+        data = { quality: quality },
+        url = '/api/v1/ideas/' + id;
 
     if (currentQuality.html() !== quality) {
-      $.ajax({
-        method: 'PATCH',
-        url: '/api/v1/ideas/' + id,
-        data: data,
-        dataType: 'JSON',
-        success: currentQuality.html(quality),
-        error: function(id){
-          alert("Error - Failed to update Idea to: " + quality);
-        }
-      });
+      ajaxCall('PATCH', url, data, currentQuality.html(quality))
     }
-
   })
 
   $('.ideas').on('click', '.thumbs_down', function(){
-    var id = this.id;
-    var currentQuality = $('tr#' + id + ' td:nth-child(2)');
-    var quality = changeQuality(currentQuality.html(), "down");
-    var data = { quality: quality };
+    var id = this.id,
+        currentQuality = $('tr#' + id + ' td:nth-child(2)'),
+        quality = changeQuality(currentQuality.html(), "down"),
+        data = { quality: quality },
+        url = '/api/v1/ideas/' + id;
 
     if (currentQuality.html() !== quality) {
-      $.ajax({
-        method: 'PATCH',
-        url: '/api/v1/ideas/' + id,
-        data: data,
-        dataType: 'JSON',
-        success: currentQuality.html(quality),
-        error: function(id){
-          alert("Error - Failed to update Idea to: " + quality);
-        }
-      });
+      ajaxCall('PATCH', url, data, currentQuality.html(quality))
     }
   })
 
 });
 
 var loadIdeas = $.getJSON('/api/v1/ideas').then(
-  // ideasResponse.map(ideaFormatter)
   function(ideasResponse, status){
     $.each(ideasResponse, function(index, idea) {
-      ideaFormatter(idea);
+      processIdea(idea);
     });
   }
 )
 
-var ideaFormatter = function(idea){
-    var id = idea.id;
-    var title = idea.title;
-    var quality = idea.quality;
-
-    var rawBody = idea.body;
-    if (rawBody.length > 100) {
-      var body = rawBody.substr(0, 100) + "...";
-    } else {
-      var body = rawBody;
-    }
-
-    var deleteButton = '<button class="delete" id=' + id + '>Delete</button>';
-    var thumbsUp = '<button class="thumbs_up" id=' + id + '>Thumbs Up</button>';
-    var thumbsDown = '<button class="thumbs_down" id=' + id + '>Thumbs Down</button>';
-
-    var buttons = thumbsUp + thumbsDown + deleteButton;
-
-    var structure =
-      '<td contenteditable="true" class="searchable" id="title">' + title + '</td>' +
-      '<td>' + quality + '</td>' +
-      '<td contenteditable="true" class="searchable" id="body">' + body + '</td>' +
-      '<td>' + buttons + '</td>';
-
-    $('.ideas tr:first').after(
-      '<tr class="searchable" id=' + id + '>' + structure + '</tr>'
-    );
-
-    $('#new_idea_title').val("");
-    $('#new_idea_body').val("");
-
+var processIdea = function(idea){
+    var structure = rowContentsFormatter(idea);
+    prependNewIdea(idea.id, structure);
+    clearNewIdeaForm();
     listenForEdits();
   }
 
@@ -140,22 +79,15 @@ var listenForEdits = function(){
     })
     .blur(function() {
       if ($(this).data("initialText") !== $(this).html()) {
-        var id = this.parentElement.id;
-        var dataType = this.id;
-        var data = new Object();
-        data[dataType] = $(this).html();
+        var id = this.parentElement.id,
+            dataType = this.classList[1],
+            data = new Object(),
+            url = '/api/v1/ideas/' + id;
 
-        $.ajax({
-          method: 'PATCH',
-          url: '/api/v1/ideas/' + id,
-          data: data,
-          dataType: 'JSON',
-          error: function(id){
-            alert("Error - Failed to update content.");
-          }
-        });
-    }
-  });
+        data[dataType] = $(this).html();
+        ajaxCall('PATCH', url, data, function(){})
+      }
+    });
 }
 
 var listenForSearches = function(){
@@ -163,8 +95,6 @@ var listenForSearches = function(){
 
   function updateQuery(){
     var query = $('#search').val();
-    // var allIdeas = $('tr').children('td.searchable');
-
     var ideaRows = $('tbody').children('tr.searchable');
 
     ideaRows.each(function(index, row){
@@ -183,58 +113,57 @@ var listenForSearches = function(){
       })
 
     })
-
-    // debugger;
-
-    // var matches = ideaRows.each(function (index, row){
-    //   $(row).children().map(function(index, tds){
-    //     return $(tds).text()
-    //   })
-    // })
-    //
-    // debugger;
-
-    // var matches = allIdeas.filter(function (data, content){
-    //   return $(content).text().includes(query);
-    // })
-    //
-    // debugger;
-
-    //   var currentText = $(content);
-    //   if (currentText.text().includes(query)) {
-    //     $(currentText.parent('tr')[0]).show()
-    //   } else {
-    //     $(currentText.parent('tr')[0]).hide();
-    //   }
-    //
-    // })
-
-
-    //   var currentText = $(content);
-    //   if (currentText.text().includes(query)) {
-    //     $(currentText.parent('tr')[0]).show()
-    //   } else {
-    //     $(currentText.parent('tr')[0]).hide();
-    //   }
-    //
-    // })
-
-
-
-    // var matches = allIdeas.each(function (data, content){
-    //   var currentText = $(content);
-    //   if (currentText.text().includes(query)) {
-    //     $(currentText.parent('tr')[0]).show()
-    //   } else {
-    //     $(currentText.parent('tr')[0]).hide();
-    //   }
-    //
-    // })
   }
 }
 
-function toggleRow(row){
-  var matches = row.filter(function (data, content){
-    return $(content).text().includes(query);
-  })
+var buttonsFormatter = function(id){
+  var deleteButton = '<button class="delete" id=' + id + '>Delete</button>',
+      thumbsUp = '<button class="thumbs_up" id=' + id + '>Thumbs Up</button>',
+      thumbsDown = '<button class="thumbs_down" id=' + id + '>Thumbs Down</button>';
+  return thumbsUp + thumbsDown + deleteButton;
+}
+
+var bodyLengthFormatter = function(rawBody){
+  if (rawBody.length > 100) {
+    return body = rawBody.substr(0, 100) + "...";
+  } else {
+    return body = rawBody;
+  }
+}
+
+var rowContentsFormatter = function(idea){
+  var title = idea.title,
+      quality = idea.quality,
+      body = bodyLengthFormatter(idea.body),
+      buttons = buttonsFormatter(idea.id);
+
+  return structure =
+    '<td contenteditable="true" class="searchable title">' + title + '</td>' +
+    '<td>' + quality + '</td>' +
+    '<td contenteditable="true" class="searchable body">' + body + '</td>' +
+    '<td>' + buttons + '</td>';
+}
+
+var prependNewIdea = function(id, structure){
+  $('.ideas tr:first').after(
+    '<tr class="searchable" id=' + id + '>' + structure + '</tr>'
+  );
+}
+
+var clearNewIdeaForm = function(){
+  $('#new_idea_title').val("");
+  $('#new_idea_body').val("");
+}
+
+var ajaxCall = function(method, url, data, successMethod){
+  $.ajax({
+    method: method,
+    url: url,
+    data: data,
+    dataType: 'JSON',
+    success: successMethod,
+    error: function(data){
+      alert("Error for: " + data);
+    }
+  });
 }
