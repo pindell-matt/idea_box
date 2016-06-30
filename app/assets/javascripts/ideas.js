@@ -77,7 +77,6 @@ $(document).ready(function(){
 });
 
 var loadIdeas = $.getJSON('/api/v1/ideas').then(
-  // ideasResponse.map(ideaFormatter)
   function(ideasResponse, status){
     $.each(ideasResponse, function(index, idea) {
       ideaFormatter(idea);
@@ -134,16 +133,17 @@ var changeQuality = function(current, movement){
 }
 
 var listenForEdits = function(){
+  var $td = $(this);
   $('td[contenteditable=true]')
     .focus(function() {
-      $(this).data("initialText", $(this).html());
+      $td.data("initialText", $td.html());
     })
     .blur(function() {
-      if ($(this).data("initialText") !== $(this).html()) {
+      if ($td.data("initialText") !== $td.html()) {
         var id = this.parentElement.id;
         var dataType = this.id;
         var data = new Object();
-        data[dataType] = $(this).html();
+        data[dataType] = $td.html();
 
         $.ajax({
           method: 'PATCH',
@@ -162,16 +162,16 @@ var listenForSearches = function(){
   $('#search').bind('keyup', updateQuery);
 
   function updateQuery(){
-    var query = $('#search').val();
-    var ideaRows = $('tbody').children('tr.searchable');
+    var $query = $('#search').val();
+    var $ideaRows = $('tbody').children('tr.searchable');
 
-    ideaRows.each(function(index, row){
+    $ideaRows.each(function(index, row){
       $(row).hide()
 
       var kids = $(row).children();
 
       var matches = kids.filter(function (data, content){
-        return $(content).text().includes(query);
+        return $(content).text().includes($query);
       })
 
       var uniqMatches = $.unique(matches);
@@ -188,4 +188,24 @@ function toggleRow(row){
   var matches = row.filter(function (data, content){
     return $(content).text().includes(query);
   })
+}
+
+var sortRows = function(){
+  var $people = $('ul.js-people'),
+      $peopleli = $people.children('li');
+
+  $peopleli.sort(function(a,b){
+    var an = a.getAttribute('data-name'),
+    	  bn = b.getAttribute('data-name');
+
+    if(an > bn) {
+    	return 1;
+    }
+    if(an < bn) {
+    	return -1;
+    }
+    return 0;
+  });
+
+  $peopleli.detach().appendTo($people);
 }
